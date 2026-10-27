@@ -1,34 +1,24 @@
-# BO2-ERROR-TRACKER-V2
+# T6 Error Tracker
 
-The program will work with both redacted and plutonium (make sure to disable the plutonium anticheat). 
+Tracks Black Ops II Zombies' script variables, animations, entities and server reset progress on Windows.
 
-![Screenshot 2023-05-27 171951](https://github.com/lveez/BO2-ERROR-TRACKER-V2/assets/65928629/e91b9a5d-d47b-4bd9-8eaa-810eeeff39c5)
+Start Plutonium T6 Zombies with `-lan` and host a local map, then open `t6-error-tracker.exe`. It attaches automatically. Server values are available when you host the game yourself. Run with `--help` for options.
 
+## Reading the values
 
-### Errors tracked:
-- exceeded maximum number of child server script variables (occurs when child_max / child_next hits 65536).
-- exceeded maximum number of anim info (occurs when anim_next / anim_max hits 4096).
-- G_Spawn: no free entities (occurs when num_entities is 1022 and there are no free ents).
-- failed memory allocation for script usage
-- MT_AllocIndex: failed allocation of bytes for script usage
-- reset
-- frametime
+| Value | Meaning |
+| --- | --- |
+| `*_next` / `*_max` | Allocator index / highest index seen on this map. These aren't exact usage counts. |
+| `anims_active`, `ents_in_use` | Animation and entity counts currently in use. |
+| `ents_free`, `num_entities` | Reusable entity slots / size of the allocated entity pool. |
+| `snapshot_ents` | Entities in the latest server snapshot. Compare this with the in-game overlay. |
+| `svs.nextSnapshotEntities` | Cumulative server snapshot counter. |
+| `svs.numSnapshotEntities` | Snapshot buffer capacity. |
+| `snapshot reset remaining` | Allocations left before the snapshot entity reset threshold. Counts down toward zero. |
+| `com_frameTime` | Engine clock in milliseconds. |
 
-----------------
+Numbers after `/` are limits. Values stay at the top; timestamped messages appear below. `--` means unavailable. Check **Status** and **Last sample** to see whether readings are current.
 
-### Usage
-You can launch the program as normal for the default options, this will track all the possible errors. If wanted you can also launch the program with the following command line arguments:
-- [-c] show child variable info
-- [-p] show parent variable info
-- [-a] show animinfo
-- [-m] show memtree info (failed memory allocation/MT_AllocIndex error)
-- [-g] show gspawn info
-- [-r] show reset info
-- [-f] show frametime info
+## About this fork
 
-You can also change some options for how the program displays the information:
-- [-d e/a] dumps entity info or anim info respectively into a txt file. 
-- [-s] show simple info (only max values)
-- [-v] show verbose memtree information (all memtree nodes)
-- [-p] disable plutonium anticheat warning
-- [-t time_in_ms] change how often the values update (a lower update time will use more CPU)
+A vibe coded Rust rewrite of [lveez's BO2 Error Tracker](https://github.com/lveez/BO2-ERROR-TRACKER-V2), forked to fix reset tracking that used client-side counts instead of the global server counter.

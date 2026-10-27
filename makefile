@@ -1,7 +1,8 @@
-SRCFILES := $(wildcard src/*.c src/*/*.c)
-
 all:
-	gcc $(SRCFILES) -lpsapi -o./bin/dbg/B2ETcli
+	cargo build
 
 release:
-	gcc -static -static-libgcc -static-libstdc++ $(SRCFILES) -o./bin/rel/B2ETcli
+	cargo build --release
+
+test:
+	cargo test

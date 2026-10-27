@@ -1,0 +1,13 @@
+[package]
+name = "t6-error-tracker"
+version = "3.0.0"
+edition = "2024"
+rust-version = "1.88"
+description = "Read-only Black Ops II Zombies server error tracker"
+
+[dependencies]
+windows-sys = { version = "0.59", features = ["Win32_Foundation", "Win32_Security", "Win32_System_Diagnostics_Debug", "Win32_System_Diagnostics_ToolHelp", "Win32_System_Threading", "Win32_System_Console", "Win32_System_SystemInformation"] }
+
+[profile.release]
+lto = true
+strip = true
