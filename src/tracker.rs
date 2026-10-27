@@ -259,7 +259,7 @@ impl Sample {
                 &mut out,
                 "parent_max:",
                 reading(self.active.then_some(self.parent_max)),
-                " / 16384",
+                " / 32768",
             );
         }
         if o.anim {
@@ -374,6 +374,16 @@ impl Sample {
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    fn parent_limit_is_32768() {
+        let options = Options::parse(["-p".into()]).unwrap().unwrap();
+        let sample = Sample {
+            active: true,
+            parent_max: 20_000,
+            ..Default::default()
+        };
+        assert!(sample.render(&options).contains("20000 / 32768"));
+    }
     #[test]
     fn metric_rows_are_stable_while_waiting_live_and_at_reset_threshold() {
         for flags in [
